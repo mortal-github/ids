@@ -1,0 +1,9 @@
+1998-11-17  mfr  <roesch@clark.net>
+* snort.c: Initial version complete, Linux only.
+
+1998-12-21  mfr  <roesch@clark.net>
+* snort.h: Cleaned up a little crap and made the system autoconf
+           aware
+* snort.c: Poked around a bit and put in some GPL notices.  No runtime code
+           changes.
+

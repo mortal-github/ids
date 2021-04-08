@@ -1,0 +1,91 @@
+AC_INIT(snort.c)
+AM_CONFIG_HEADER(config.h)
+AM_INIT_AUTOMAKE(snort,0.96)
+
+AC_PROG_CC
+ if test -n "$GCC"; then
+      CFLAGS="$CFLAGS -Wall "
+ fi
+
+AC_CANONICAL_HOST
+linux=no
+
+case "$host" in
+  *-openbsd*)
+    AC_DEFINE(OPENBSD)
+    ;;
+  *-sgi-irix5*)
+    AC_DEFINE(IRIX)
+    no_libsocket=yes
+    no_libnsl=yes
+    if test -z "$GCC"; then
+      sgi_cc=yes
+    fi
+    ;;
+  *-sgi-irix6*)
+    AC_DEFINE(IRIX)
+    no_libsocket=yes
+    no_libnsl=yes
+    if test -z "$GCC"; then
+      sgi_cc=yes
+    fi
+    ;;
+  *-solaris2.0*)
+    AC_DEFINE(STUPID_SOLARIS_CHECKSUM_BUG)
+    AC_DEFINE(SOLARIS)
+    AC_DEFINE(WORDS_BIGENDIAN) 
+    ;;
+  *-solaris2.1*)
+    AC_DEFINE(STUPID_SOLARIS_CHECKSUM_BUG)
+    AC_DEFINE(SOLARIS)
+    AC_DEFINE(WORDS_BIGENDIAN) 
+    ;;
+  *-solaris2.2*)
+    AC_DEFINE(STUPID_SOLARIS_CHECKSUM_BUG)
+    AC_DEFINE(SOLARIS)
+    AC_DEFINE(WORDS_BIGENDIAN) 
+    ;;
+  *-solaris2.3*)
+    AC_DEFINE(STUPID_SOLARIS_CHECKSUM_BUG)
+    AC_DEFINE(SOLARIS)
+    AC_DEFINE(WORDS_BIGENDIAN) 
+    ;;
+  *-solaris2.4*)
+    AC_DEFINE(STUPID_SOLARIS_CHECKSUM_BUG)
+    AC_DEFINE(SOLARIS)
+    AC_DEFINE(WORDS_BIGENDIAN) 
+    ;;
+  *-solaris2.5.1)
+    AC_DEFINE(STUPID_SOLARIS_CHECKSUM_BUG)
+    AC_DEFINE(SOLARIS)
+    AC_DEFINE(WORDS_BIGENDIAN) 
+    ;;
+  *-solaris*)
+    AC_DEFINE(SOLARIS)
+    AC_DEFINE(WORDS_BIGENDIAN) 
+    ;;
+  *-linux*)
+    linux=yes
+    AC_DEFINE(LINUX)
+    AC_DEFINE(PCAP_TIMEOUT_IGNORED)  # libpcap doesn't even LOOK at
+                                     # the timeout you give it under Linux
+    ;;
+  *-freebsd*)
+    AC_DEFINE(FREEBSD)
+    ;;
+  *-bsdi*)
+    AC_DEFINE(BSDI)
+    ;;
+esac
+
+if test -z "$no_libnsl"; then
+AC_CHECK_LIB(nsl, inet_ntoa)
+fi
+if test -z "$no_libsocket"; then
+AC_CHECK_LIB(socket, socket)
+fi
+
+AC_CHECK_LIB(pcap, pcap_datalink)
+AC_PROG_INSTALL
+AC_OUTPUT(Makefile)
+
