@@ -1,0 +1,15 @@
+Sebastian	<scut@nb.in-berlin.de>
+	* Added TOS decoding and logging
+
+Ron Gula	<rjg@network-defense.com>
+	* Provided lots of advice and signatures  Check out his network IDS
+	  Dragon at www.network-defense.com
+
+Mike Borella	<mike@borella.net>
+	* Made some libpcap code that was actually easy enough to follow along
+          in so that even idiots like myself could do something like this.  
+          Mike's a cool dude (and he listens to Slayer), check his stuff out
+          at www.borella.net
+
+Jed Pickel	<jed@pickel.net>
+	* Sent in the RAW packet decoder routine

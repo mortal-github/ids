@@ -1,3 +1,20 @@
+   The "generic" notes for putting this thing together are below.  Here's the 
+short version.
+
+1.) *** Make sure you have libpcap installed!!! ***
+2.) ./configure
+3.) make
+4.) make install
+5.) make a sample rules file (if you want to use rules)
+5.) snort -?
+6.) If you've used previous versions of Snort, you need to rewrite your rules
+    to make them compliant to the new rules format.  See the RULES.SAMPLE file
+    for the new rules format.
+7.) Have fun!
+
+   Any questions?  Send them to roesch@clark.net!
+
+
 Basic Installation
 ==================
 

@@ -1,57 +1,38 @@
-#ifndef __SNORT_H__
-#define __SNORT_H__
+/*
+** Copyright (C) 1998,1999 Martin Roesch <roesch@clark.net>
+**
+** This program is free software; you can redistribute it and/or modify
+** it under the terms of the GNU General Public License as published by
+** the Free Software Foundation; either version 2 of the License, or
+** (at your option) any later version.
+**
+** This program is distributed in the hope that it will be useful,
+** but WITHOUT ANY WARRANTY; without even the implied warranty of
+** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+** GNU General Public License for more details.
+**
+** You should have received a copy of the GNU General Public License
+** along with this program; if not, write to the Free Software
+** Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+*/
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
+#ifndef __DECODE_H__
+#define __DECODE_H__
+
 
 /*  I N C L U D E S  **********************************************************/
-#include <stdio.h>
-#include <pcap.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include <string.h>
-#include <strings.h>
-#include <errno.h>
-#include <sys/types.h>
-#include <sys/socket.h>
-#include <netinet/in.h>
-#include <arpa/inet.h>
-#include <netinet/tcp.h>
-#include <netinet/udp.h>
-#include <sys/stat.h>
-#include <sys/types.h>
-#include <fcntl.h>
-#include <signal.h>
+#include "snort.h"
 
 
 /*  D E F I N E S  ************************************************************/
-
-#ifdef SOLARIS
-#define DEFAULT_INTF	"hme0"
-#endif
-
-#ifdef LINUX
-#define DEFAULT_INTF	"eth0"
-#endif
-
-#ifdef FREEBSD
-#define DEFAULT_INTF    "xl0"
-#endif
-
-#ifdef WORDS_BIGENDIAN
-#define NETMASK 0xFFFFFF00
-#else
-#define NETMASK 0x00FFFFFF
-#endif
-
-
 #define ETHERNET_HEADER_LEN     14
 #define ETHERNET_MTU            1500
 #define ETHERNET_TYPE_IP        0x0800
 #define ETHERNET_TYPE_ARP       0x0806
 #define ETHERNET_TYPE_REVARP    0x8035
 #define ETHERNET_TYPE_IPX       0x8137
+
+#define SLIP_HEADER_LEN         16
 
 #define TH_FIN  0x01
 #define TH_SYN  0x02
@@ -113,30 +94,40 @@
 #define ICMP_PREC_CUTOFF        15      /* Precedence cut off */
 #define NR_ICMP_UNREACH         15      /* instead of hardcoding immediate value */
 
+#define IPOPT_EOL               0x00
+#define IPOPT_NOP               0x01
+#define IPOPT_RR                0x07
+#define IPOPT_TS                0x44
+#define IPOPT_SECURITY          0x82
+#define IPOPT_LSRR              0x83
+#define IPOPT_LSRR_E            0x84
+#define IPOPT_SATID             0x88
+#define IPOPT_SSRR              0x89
 
-#define STD_BUF  256
+#define TOPT_EOL                0x00
+#define TOPT_NOP                0x01
+#define TOPT_MSS                0x02
+#define TOPT_WS                 0x03
+#define TOPT_TS                 0x08
+#ifndef TCPOPT_WSCALE
+#define TCPOPT_WSCALE           3       /* window scale factor (rfc1072) */
+#endif
+#ifndef TCPOPT_ECHO
+#define TCPOPT_ECHO             6       /* echo (rfc1072) */
+#endif
+#ifndef TCPOPT_ECHOREPLY
+#define TCPOPT_ECHOREPLY        7       /* echo (rfc1072) */
+#endif
+#ifndef TCPOPT_TIMESTAMP
+#define TCPOPT_TIMESTAMP        8       /* timestamps (rfc1323) */
+#endif
 
-#define VERSION    "0.96"
 
-#define RIGHT    1
-#define LEFT     0
+#define EXTRACT_16BITS(p) ((u_int16_t) ntohs (*(u_int16_t *)(p)))
+#define EXTRACT_32BITS(p) ((u_int32_t) ntohl (*(u_int32_t *)(p)))
+
 
 /*  D A T A  S T R U C T U R E S  *********************************************/
-typedef struct progvars
-{
-   int data_flag;
-   int verbose_flag;
-   int showarp_flag;
-   int log_flag;
-   int pkt_cnt;
-   u_long homenet;
-   char config_file[STD_BUF];
-   char log_dir[STD_BUF];
-   char *interface;
-   
-   char *pcap_cmd;
-} PV;
-
 typedef struct _EtherHdr
 {
   unsigned char  ether_dst[6];
@@ -144,65 +135,44 @@ typedef struct _EtherHdr
   unsigned short ether_type;
 } EtherHdr;
 
-
-
-typedef struct _PrintIP
-{
-   u_char timestamp[64];
-   u_char saddr[16];
-   u_char daddr[16];
-   u_short sport;
-   u_short dport;
-   u_long seq;
-   u_long ack;
-   u_char flags;
-   char proto[5];
-   u_long win;
-   u_char ttl;
-   u_short udp_len; 
-   u_char icmp_str[64];
-} PrintIP;
-
-
-
 typedef struct _IPHdr
 {
 #if defined(WORDS_BIGENDIAN)
-  u_char    ip_ver:4,\
-              ip_hlen:4;
+  u_char    ip_ver:4,         /* IP version */
+            ip_hlen:4;        /* IP header length */
 #else
-  u_char    ip_hlen:4,\
-              ip_ver:4;
+  u_char    ip_hlen:4,       
+             ip_ver:4;
 #endif
-  u_char   ip_tos;
-  u_short   ip_len;
-  u_short   ip_id;
+  u_char    ip_tos;           /* type of service */
+  u_short   ip_len;           /* datagram length */
+  u_short   ip_id;            /* identification  */
   u_short   ip_off;
-  u_char   ip_ttl;
-  u_char   ip_proto;
-  u_short   ip_csum;
-  struct in_addr   ip_src;
-  struct in_addr   ip_dst;
+  u_char    ip_ttl;           /* time to live field */
+  u_char    ip_proto;         /* datagram protocol */
+  u_short   ip_csum;          /* checksum */
+  struct in_addr   ip_src;    /* source IP */
+  struct in_addr   ip_dst;    /* dest IP */
 } IPHdr;
 
 
 typedef struct _TCPHdr
-{
-        u_short th_sport;               /* source port */
-        u_short th_dport;               /* destination port */
-        u_long th_seq;                 /* sequence number */
-        u_long th_ack;                 /* acknowledgement number */
+{       
+        u_short th_sport;       /* source port */
+        u_short th_dport;       /* destination port */
+        u_long th_seq;          /* sequence number */
+        u_long th_ack;          /* acknowledgement number */
 #ifdef WORDS_BIGENDIAN
-        u_char  th_off:4,               /* data offset */
-                  th_x2:4;                /* (unused) */
+        u_char  th_off:4,       /* data offset */
+                  th_x2:4;      /* (unused) */
 #else
-        u_char  th_x2:4,                /* (unused) */
-                  th_off:4;               /* data offset */
+        u_char  th_x2:4,        /* (unused) */
+                  th_off:4;     /* data offset */
 #endif
         u_char  th_flags;
-        u_short th_win;                 /* window */
-        u_short th_sum;                 /* checksum */
-        u_short th_urp;                 /* urgent pointer */
+        u_short th_win;         /* window */
+        u_short th_sum;         /* checksum */
+        u_short th_urp;         /* urgent pointer */
 } TCPHdr;
 
 
@@ -212,7 +182,7 @@ typedef struct _UDPHdr
   u_short uh_dport;
   u_short uh_len;
   u_short uh_chk;
-} UDPHdr;   
+} UDPHdr;
 
 
 typedef struct _ICMPhdr
@@ -239,7 +209,7 @@ typedef struct _ARPHdr
   unsigned char   ar_pln;         /* length of protocol address   */
   unsigned short  ar_op;          /* ARP opcode (command)         */
 } ARPHdr;
-  
+
 
 
 typedef struct _EtherARP
@@ -252,26 +222,16 @@ typedef struct _EtherARP
 } EtherARP;
 
 
-/*  G L O B A L S  ************************************************************/
-PV pv;
-int datalink;
-char *progname;
-char *pcap_cmd;
-char *pktidx;
-pcap_t *pd;
-pcap_handler grinder;
-PrintIP pip;
-FILE *log_ptr;
-int flow;
+
+typedef struct _IPOptions
+{
+   u_char code;
+   u_char len;
+   u_char *data;
+} IPOptions;
+
 
 /*  P R O T O T Y P E S  ******************************************************/
-int ParseCmdLine(int, char**);
-int OpenPcap(char *);
-int DisplayBanner();
-int SetPktProcessor();
-int DecodePkt();
-void GetTime(char *);
-void CleanExit();
 void DecodeEthPkt(char *, struct pcap_pkthdr *, u_char *);
 void DecodeSlipPkt(char *, struct pcap_pkthdr *, u_char *);
 void DecodeRawPkt(char *, struct pcap_pkthdr *, u_char *);
@@ -281,11 +241,8 @@ void DecodeIPX(u_char *, int);
 void DecodeTCP(u_char *, int);
 void DecodeUDP(u_char *, int);
 void DecodeICMP(u_char *, int);
-void PrintIPPkt(FILE *, int);
-void PrintNetData(FILE *, char *, int);
-char *copy_argv(char **);
-int OpenLogFile();
-void SetFlow();
+void DecodeIPOptions(u_char *, int);
+void DecodeTCPOptions(u_char *, int);
 
 
-#endif  /* __SNORT_H__ */
+#endif  /* __DECODE_H__ */

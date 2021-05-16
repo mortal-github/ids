@@ -1,0 +1,97 @@
+# This file posits that you're trying to defend the 192.168.1.0 class C network
+
+# we're trying to log data to "sensitive" ports, plus alert on truly suspicious
+# activity
+
+# some of these things may not be suspicious in your network environment, but we
+# run a fairly tight network (access wise) where I work, so most every alert 
+# rule for specific network rules shown here applies in my case
+
+# if you need help writing a specific rule, feel free to drop me a line!
+
+#  -Marty (roesch@clark.net)
+
+
+##################################
+# alert on interesting packets
+##################################
+
+# look for stealth port scans/sweeps
+alert tcp any any -> 192.168.1.0/24 any (msg:"SYN FIN Scan"; flags: SF;)
+alert tcp any any -> 192.168.1.0/24 any (msg:"FIN Scan"; flags: F;)
+alert tcp any any -> 192.168.1.0/24 any (msg:"NULL Scan"; flags: 0;)
+alert tcp any any -> 192.168.1.0/24 any (msg:"XMAS Scan";flags: FPU;)
+
+# find backdoor attempts
+alert udp any any -> 192.168.1.0/24 31337 (msg:"Back Orifice";)
+alert tcp any any -> 192.168.1.0/24 12345 (msg:"Netbus";)
+alert tcp any any -> 192.168.1.0/24 12346 (msg:"Netbus";)
+alert tcp any any -> 192.168.1.0/24 10752 (msg:"Linux mountd backdoor";)
+alert udp any any -> 192.168.1.0/24 2140 (msg:"Deep Throat";)
+
+# example of ICMP type/code rules
+alert icmp any any -> 192.168.1.0/24 any (msg:"Being Pinged"; itype: 8;)
+alert icmp any any -> 192.168.1.0/24 any (msg:"Host Unreachable"; itype: 3; icode: 1;)
+
+# detect traceroutes
+alert icmp any any -> 192.168.1.0/24 any (msg:"Windows Traceroute"; TTL: 1; itype: 8;)
+alert udp any any -> 192.168.1.0/24 any (msg:"Traceroute"; TTL: 1;)
+
+# NT SNMP user list
+alert udp any any -> 192.168.1.0/24 161 (msg:"NT user list"; content:"|2b 06 01 04 01 4d 01 02 19|";)
+
+# IMAP buffer overflow
+alert tcp any any -> 192.168.1.0/24 143 (msg:"IMAP buffer overflow!"; content:"|E8 C0FF FFFF|/bin/sh"; )
+
+# x86 named buffer overflow
+alert tcp any any -> 192.168.1.0/24 53 (msg:"named buffer overflow!"; content:"|CD80 E8D7 FFFF FF|/bin/sh";)
+
+# example of CGI attack recognition rule
+alert tcp any any -> 192.168.1.0/24 80 (content:"/cgi-bin/phf"; msg:"PHF Attack!";)
+
+# netbios crap
+alert udp any any -> 192.168.1.0/24 137 (msg:"SMB Name Wildcard"; content:"CKAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA|0000|";)
+alert tcp any any -> 192.168.1.0/24 139 (msg:"Samba client access"; content:"|00|Unix|00|Samba";)
+alert tcp any any -> 192.168.1.0/24 139 (msg:"SMB CD..."; content:"\...|00 00 00|";)
+alert tcp any any -> 192.168.1.0/24 139 (msg:"SMB CD.."; content:"\..|2f 00 00 00|";)
+alert tcp any any -> 192.168.1.0/24 139 (msg:"SMB C$ access"; content:"\C$|00 41 3a 00|";)
+alert tcp any any -> 192.168.1.0/24 139 (msg:"SMB D$ access"; content:"\D$|00 41 3a 00|";)
+alert tcp any any -> 192.168.1.0/24 139 (msg:"SMB ADMIN$ access"; content:"\ADMIN$|00 41 3a 00|";)
+
+# other interesting ports....
+alert udp any any -> 192.168.1.0/24 161 (msg:"SNMP traffic";)
+alert tcp any any -> 192.168.1.0/24 143 (msg:"IMAP traffic";)
+alert tcp any any -> 192.168.1.0/24 512 (msg:"REXEC traffic";)
+alert tcp any any -> 192.168.1.0/24 513 (msg:"RSH traffic";)
+alert tcp any any -> 192.168.1.0/24 514 (msg:"RLOGIN traffic";)
+alert udp any any -> 192.168.1.0/24 194 (msg:"IRC traffic";)
+alert tcp any any -> 192.168.1.0/24 194 (msg:"IRC traffic";)
+alert tcp any any -> 192.168.1.0/24 111 (msg:"Portmap traffic";)
+alert udp any any -> 192.168.1.0/24 111 (msg:"Portmap traffic";)
+alert tcp any any -> 192.168.1.0/24 32771 (msg:"Sun portmap traffic";)
+alert udp any any -> 192.168.1.0/24 32771 (msg:"Sun portmap traffic";)
+
+# token DoS detector
+alert udp 192.168.1.0/24 7 -> 192.168.1.0/24 19 (msg:"UDP bomb";)
+alert udp 192.168.1.0/24 19 -> 192.168.1.0/24 7 (msg:"UDP bomb";)
+
+# alert on stuff going where it probably shouldn't be
+alert tcp any 53 -> 192.168.1.0/24 :1024 (msg:"Source Port traffic";)
+alert tcp any 25 -> 192.168.1.0/24 :1024 (msg:"Source Port traffic";)
+
+#log all ICMP traffic
+log icmp any any -> any any
+
+#log interesting TCP/UDP traffic
+#all tcp traffic below port 1024
+log tcp any any -> 192.168.1.0/24 :1024 
+
+#grab incoming xwindows traffic
+log tcp any any -> 192.168.1.0/24 6000:6010 
+
+# incoming high port RPC stuff too
+log tcp any any -> 192.168.1.0/24 32000:33000 
+
+#do the same for UDP
+log udp any any -> 192.168.1.0/24 :2000 
+log udp any any -> 192.168.1.0/24 32000:33000

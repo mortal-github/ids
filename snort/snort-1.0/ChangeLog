@@ -1,0 +1,188 @@
+1999-04-28  mfr  <roesch@clark.net>
+
+	* rules.c: Added the code to change the order the rules are applied in.
+
+	* snort.c: Added two new command line switches: "-o" and "-s".
+
+	* decode.c: Added in new layer 2 decoding for SLIP and RAW packet 
+	            types.
+
+        * log.c: Added code to send alert notification to syslog.
+
+1999-04-17  mfr  <roesch@clark.net>
+
+	* rules.c: Rewrote the rules option parser.  It's now a much more
+                   consistant interface for both reading rules into the program
+                   and writing them as a user.  Added in new rule types to 
+                   alert on TTL values, and ICMP types/codes.
+
+	* log.c: Most of the logging code has been dramatically rewritten as 
+                 well, and it now works much better. 
+
+	* mstring.c: Added the notion of a meta character to mSplit() so that
+                     it was possible to not split on every single occurence of
+                     a character in a string.
+
+	* decode.c: Smoothed out all the logging system calls to work nicely
+                    with the new log code.
+
+1999-04-08  mfr  <roesch@clark.net>
+
+	* rules.c: Moved AlertPkt() and LogPkt() to log.c
+
+	* log.c: Totally revamped the logging code to be more logical and 
+                 have less duplication in the code.  There are now seperate 
+                 logging functions for each of the layers of the packet.  
+                 PrintIPPkt() has been totally rewritten, PrintFragHeader has
+                 been eliminated, and two functions have been moved over from
+                 rules.c and completely rewritten as well.
+
+	* decode.c: Reworked the routines which called the logging functions.
+
+1999-04-06  mfr  <roesch@clark.net>
+
+	* decode.c: added code to display/log the Fragment ID field of the IP
+                    header.  Got a nice patch from Sebastian to add in TOS 
+                    decoding as well.  Added ethernet header logging and 
+                    display code.
+
+	* mstring.c: fixed the match() routine.  It had a tendency to miss some
+                     things some of the time.  (oops!)  Content based matching
+                     should work all the time now.
+
+	* log.c: added code to display some of the new stuff that's decoded.
+
+	* snort.c: add a new command line switch: "-e".  This will display the 
+                   ethernet header data in both the log files and on the screen.
+
+1999-03-24  mfr  <roesch@clark.net>
+        
+        * decode.c: fixed the damned TCP and IP options decoders.  These things
+                    were a friggin pain in the ass to program up properly.
+                    Recoding them stopped the huge loop that they had a bad
+                    tendancy to get stuck in, thereby making the rest of the 
+                    program nigh infinitely more useful for just about any
+                    friggin problem under the friggin sun.  Frig it.
+
+	* log.c: Stopped the insanity of unnessary carriage returns in the log
+                 files and on screen printouts.  Another PITA.
+
+        * rules.c: Fixed output formatting yet again.
+
+
+1999-03-21  mfr  <roesch@clark.net>
+
+	* snort.c: fixed a bug in the timestamp code so the month prints out
+                   right
+
+	* decode.c: added code to detect and decode IP and TCP Options.  Also
+                 added code to print packet fragments with truncated headers
+                 into a PACKET_FRAG file which gets dumped in the default log
+                 directory.
+
+	* log.c: added code and data structures to print out IP and TCP Options
+                 plus I fixed the f'd up fragment print out logic.  Changed
+                 OpenLogFile() to include a mode argument for packet fragment
+                 print out.
+
+	* rules.c: rewired the entire rules test routine and added some long
+                   needed goto's into the program.  I feel manly now.  Also
+                   added a new rule field: TCP flags.  This allows us to 
+                   alert/log/pass on tcp flags.  Also added in port range 
+                   functionality, you can now specify a range of ports, or 
+                   greater than/less than a specified port.
+ 
+
+1999-03-08  mfr  <roesch@clark.net>
+
+	* snort.c: Ripped off the timestamp printout routines from tcpdump
+		   and stuffed them into snort.c, yum yum.  This gives us
+		   millisecond timestamping on the packets for those of you
+		   interested in such things.
+
+
+1999-03-06  mfr  <roesch@clark.net>
+
+	* mstring.c: mContainsSubstring has been replaced.  mContainsSubstring 
+		     is a brute force pattern matcher, and is therefore very
+		     slow and not too efficient.  The new routine, match(), 
+		     implements a Boyer-Moore string search algorithm and is 
+		     much faster in the general case and much more tolerent of
+		     "poor" pattern selection.
+
+	* log.c: PrintNetData has been completely rewritten.  It should now be
+                 much faster and only needs to generate the print out buffer
+                 once per packet.  This routine was a major source of slow 
+                 down/dropped packets before.  You still shouldn't use verbose 
+                 mode with the "-d" command line switch if you're using Snort 
+                 as an IDS, because it's still slow enough to drop some large
+                 packets.  Packet print out has changed as well, with the 
+                 different packet layers seperated by onto their own lines
+                 (well, mostly).  Fragmented packets are now recorded in a 
+                 "FRAG" file.
+
+	* decode.c: Snort now detects fragmented packets, plus the DF and MF 
+                    bits, and decodes the fragment offset.  
+     
+	* snort.c: Now displays packet collected/dropped statistics when 
+                   shutting down.
+
+
+1999-02-18  mfr  <roesch@clark.net>
+
+	* snort.c: Code cleanup and some error checking was added.  The system
+		   now accepts the interface name you give it at the command
+		   line.  Fixed a problem with underallocating the interface
+		   name buffer for names specified on the command line.  
+		   Suprisingly, this only came to light when tested on the 
+  		   Sparc architecture.
+
+	* log.c: ICMP logging now includes the ICMP code description in the 
+		 filename.  This makes it easier to see what you're interested
+		 in without having to go digging into the log files.
+
+	* decode.c: Made the ICMP types and codes a little more compatible with
+		    being used as a filename.
+
+
+1999-01-28  mfr  <roesch@clark.net>
+
+        * rules.c: Rules sorting is now implemented.  There are actually three
+                   seperate lists (Pass, Log, Alert) now, with the rules being
+                   placed on to the lists in the order they're read from the 
+                   rules file.  The rule execution order was changed, now
+                   Alert rules are applied first, then Pass Rules, the Log 
+                   rules.  Content based rules are available now, the actual
+                   application layer data can be searched, both binary and 
+                   text, for a specific pattern to activate a rule on.
+
+        * decode.c: Minor changes to reflect the new rules structure.
+
+
+1999-01-19  mfr  <roesch@clark.net>
+
+        * snort.c: Modularized the code, big time!  New source modules are log,
+                   rules, decode, and mstring.  Dumped SetFlow() for now.
+
+        * rules.c: Rules based packet logging now enabled!
+
+        * log.c: Now keeps track of TCP/UDP conversations better!
+
+        * decode.c: Enhanced decoding of packets, including ICMP ECHO seq and
+                    id!
+ 
+
+1999-01-08  mfr  <roesch@clark.net>
+
+        * snort.c: Made a fix to SetFlow() so that it wouldn't dump the
+                   program if it got traffic from 0.0.0.0 or 255.255.255.255.
+
+        * snort.h: Removed the "#define VERSION" since it's handled in config.h.
+
+        * README: Proper README file included with this distro
+
+
+1998-12-21  mfr  <roesch@clark.net>
+	* snort.c: Made this file, figured out autoconf
+	
+

@@ -1,0 +1,102 @@
+04-28-99	Woohoo!  One point oh baby!  New stuff: now does SLIP and 
+                RAW (PPP) packets, so all you people out there with modems can
+		use Snort now too.  I also added in options to send alerts to 
+		syslog.  The stability/functionality of the last release was 
+		good enough for me to decide that 1.0 was ready to ship, so 
+		here it is.  Enjoy!
+		
+04-17-99        Well, I guess I decided to change things around a bit.  I have
+                rewritten about half of the rules parser so that future 
+                addition of rule types people find generally interesting will be
+                much easier to do.  I also totally rewrote the logging section
+                so that it was more sane to write follow on code with.  Those
+                are the major big changes.  I'm finally happy with the way this
+                software is laid out and operates, so if this one works pretty
+                well, I'll slap whatever bug fixes need to be made onto it and
+                it'll really truly be version 1.0.
+
+04-06-99	Ok, this is the big one, I think everything is stable enough 
+                now for a general release.  If this one doesn't do anything 
+                bizzare once it gets out into the real world, it's going to be
+                version 1.0, and this time I mean it! :) Note that I'm 
+                including the snort-lib template file, which has some useful
+                patterns and rules that people may want to use.  Also note that
+                this is version 0.99 rc5, there was no version rc4!  Ok, that's
+                it for now, if anyone has any problems with this version, let
+                me know!
+
+03-24-99        Let me just say that I think I might need to implement some
+                sort of formalized testing regimen before making major 
+                releases.  Please pardon the last two crap releases, not enough
+                time and too much work for one person to do. (lets all have a 
+                pity party...)  Anyway, I beat the crap out of this version 
+                with iptest and nmap, and I think it works pretty damn good 
+                now.  Lets hope it continues to work well tomorrow...
+
+03-21-99	Ok, good size update, I think this may turn out to be 1.0, but
+                I'm done thinking that seriously for the time being.  Added
+                TCP flag-based rules, port range rules, IP and TCP option 
+                decoding, truncated packet handling, improved fragmented packet
+                handling, and some bug fixing.  I'm not quite sure what else I'd
+                like to put in before the 1.0 release, so I thinking this is
+                going to be it.  If there's any big feature you've been wishing
+                for, now's the time to ask!
+
+03-08-99	Got a request to do more precise timestamping, so I ripped off
+		the TCPDump timestamp routine and stuffed it in Snort.  You
+		can now see which particular millisecond packet XYZ showed up
+		in.  I'm working on the rest of the stuff....
+
+03-06-99        Well, no new rules yet, but this program is a lot faster than
+                the last release.  The two biggest bottleneck routines have been
+                rewritten and are now faster and more efficient.  I've also
+                started doing more complete decoding of the IP header, starting
+                with the fragment data.   For those of you not using Linux, 
+                collected/dropped packet statistics are now being generated
+                when Snort is exited.
+
+                The next release will (hopefully) decode the fragments and be 
+                able to apply the rules set to them.  I'm also planning on 
+                having IP Option decoding in the next release, plus the new 
+                rules set.  Stay tuned!
+
+02-18-99	I've started a new job and gotten one of those ergonomic 
+		keyboards, so development has slowed a bit.  This release 
+		focuses on minor bug fixes and code cleanup.  I'm thinking about
+		changing the rules format to something with one rule argument
+		per line.  This will make for larger, more readable rules files
+		at the cost of more typing for the user.  It sorta sucks,
+		but this is the best way I can think of to do it...
+
+01-28-99        Content based logging is done.  With this addition, this thing
+                can finally be used for light duty IDS tasks and catch most 
+                things.  There still needs to be some additional work done to
+                add rules for things like TCP flags, fragments, and IP options,
+                but the base structure is there.
+
+                Automatic rules sorting is implemented now too, so you can make
+                your rules look as disorganized as you want.
+
+                If nobody finds any show stopper bugs in this release, this is
+                going to be 1.0!
+
+01-19-99        Rules based packet capture is a reality now.  Added it pretty
+                much all in a day or so of serious hacking.  The code is
+                modularized now into excitingly chunky files.  I did this to
+                avoid insanity, and I highly recommend it.  Look at the README
+                file or the "RULES.SAMPLE" file to see how rules work.  I also
+                fixed the seriously porked logging code, now all conversations
+                end up in single files based upon the homenet address command
+                line parameter, or in its absense, hi port/lo port.  I highly
+                recommend using the homenet capability (-h option).
+
+                Coming soon: Content based logging!
+
+01-08-99	I'm thinking about putting in some "capture/pass" logic into 
+                the program to facilitate rules/content based traffic capture.  
+                In other words, make some kind of light intrusion detection 
+                capability.  Look for it by version 1.0.
+
+
+
+ 

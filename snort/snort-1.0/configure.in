@@ -1,6 +1,6 @@
 AC_INIT(snort.c)
 AM_CONFIG_HEADER(config.h)
-AM_INIT_AUTOMAKE(snort,0.96)
+AM_INIT_AUTOMAKE(snort,1.0)
 
 AC_PROG_CC
  if test -n "$GCC"; then
@@ -33,36 +33,29 @@ case "$host" in
   *-solaris2.0*)
     AC_DEFINE(STUPID_SOLARIS_CHECKSUM_BUG)
     AC_DEFINE(SOLARIS)
-    AC_DEFINE(WORDS_BIGENDIAN) 
     ;;
   *-solaris2.1*)
     AC_DEFINE(STUPID_SOLARIS_CHECKSUM_BUG)
     AC_DEFINE(SOLARIS)
-    AC_DEFINE(WORDS_BIGENDIAN) 
     ;;
   *-solaris2.2*)
     AC_DEFINE(STUPID_SOLARIS_CHECKSUM_BUG)
     AC_DEFINE(SOLARIS)
-    AC_DEFINE(WORDS_BIGENDIAN) 
     ;;
   *-solaris2.3*)
     AC_DEFINE(STUPID_SOLARIS_CHECKSUM_BUG)
     AC_DEFINE(SOLARIS)
-    AC_DEFINE(WORDS_BIGENDIAN) 
     ;;
   *-solaris2.4*)
     AC_DEFINE(STUPID_SOLARIS_CHECKSUM_BUG)
     AC_DEFINE(SOLARIS)
-    AC_DEFINE(WORDS_BIGENDIAN) 
     ;;
   *-solaris2.5.1)
     AC_DEFINE(STUPID_SOLARIS_CHECKSUM_BUG)
     AC_DEFINE(SOLARIS)
-    AC_DEFINE(WORDS_BIGENDIAN) 
     ;;
   *-solaris*)
     AC_DEFINE(SOLARIS)
-    AC_DEFINE(WORDS_BIGENDIAN) 
     ;;
   *-linux*)
     linux=yes
@@ -78,14 +71,19 @@ case "$host" in
     ;;
 esac
 
+dnl make sure we've got all our libraries
 if test -z "$no_libnsl"; then
 AC_CHECK_LIB(nsl, inet_ntoa)
 fi
+
 if test -z "$no_libsocket"; then
 AC_CHECK_LIB(socket, socket)
 fi
 
 AC_CHECK_LIB(pcap, pcap_datalink)
+
+AC_CHECK_LIB(m, pow)
+
 AC_PROG_INSTALL
 AC_OUTPUT(Makefile)
 

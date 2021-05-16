@@ -1,0 +1,163 @@
+Snort Version 1.0
+
+by Martin Roesch (roesch@clark.net)
+
+Distribution Site:
+http://www.clark.net/~roesch/security.html 
+
+******************************************************************************
+COPYRIGHT
+
+Copyright (C)1998,1999 Martin Roesch
+
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+
+Some of this code has been taken from tcpdump, which was developed
+by the Network Research Group at Lawrence Berkeley National Lab,
+and is copyrighted by the University of California Regents.
+
+******************************************************************************
+
+DESCRIPTION
+
+This program reads and parses packets from the link layer through the
+application layer, dumping the decoded packet data.
+
+It can log these packets in their decoded form to directories which are 
+generated based upon the IP address of the remote peer.  This can
+be used as a sort of "poor man's intrusion detection system" if you
+specify what traffic you want to record and what to let through.  The 
+traffic to be recorded can be filtered at the command line or via a 
+flexible set of rules contained within a file.
+
+For instance, I use it to record traffic of interest to the six computers in 
+my office at work while I'm away on travel or gone for the weekend.  It's 
+also nice for debugging network code since it shows you most of the Important 
+Stuff(TM) about your packets (as I see it anyway).  The code is pretty easy
+to modify to provide more complete packet decoding, so feel free to make 
+suggestions.
+
+
+******************************************************************************
+
+[*][USAGE]
+
+Command line: 
+
+	snort -[options] <filters>
+
+Options:
+
+	-a		Display ARP packets (very basic decoding right now)
+
+	-c <cf>		Use configuration file <cf>.  This is the rules file
+			which tells the system what to log, alert on, or pass!
+
+	-d		Dump the application layer data
+
+	-e		Display/log the ethernet packet header data
+
+	-h <hn>		Set the "home network" to <hn>, which is a class C IP 
+			address something like 192.168.1.0 or whatever.  If you
+			use this switch, traffic coming from external networks
+			will be formatted with the directional arrow of the 
+			packet dump pointing right for incoming external 
+			traffic, and left for outgoing internal traffic.  Kind
+			of silly, but it looks nice.
+
+	-i <if>		Use interface <if>.  Defaults to eth0 on Linux, hme0 on
+			Solaris, and xl0 on FreeBSD.
+
+	-l <ld>		Log packets to directory <ld>.  Sets up a hierarchical
+			directory structure with the log directory as the base
+			starting directory, and the IP address of the remote
+			peer generating traffic as the directory which packets
+			packets from that adress are stored in.
+
+	-n <num>	Exit after processing <num> packets.
+
+	-o              Change the order in which the rules are applied to 
+	                packets.  Instead of being applied in the standard
+			Alert->Pass->Log order, this will apply them in 
+			Pass->Alert->Log order, allowing people to avoid having
+			to make huge BPF command line arguments to filter their
+			alert rules.  User requested.
+
+	-s              Log alert messages to the syslog.  On linux boxen, they
+	                will appear in /var/log/secure.
+
+	-v		Be verbose.  Prints packets out to the console.  There
+                        is one big problem with verbose mode: it's still kind
+                        of slow.  If you are doing IDS work with Snort, don't
+                        use the -v switch, you WILL drop packets (not many, but
+                        some).
+
+	-V		Show the version number and exit.
+
+	-?		Show the usage summary and exit.
+
+
+
+
+[*][FILTERS]:
+
+     The "filters" are standard BPF style filters as seen in TCPDump.  Look
+at the man page for TCPDump for docs on how to use it properly.  In general,
+you can give it a host, net or protocol to filter on and some logical statements
+to tie it together and get the specific traffic you're interested in.  For 
+example:
+
+[zeus ~]# ./snort -h 192.168.1.0/24 -d -v host 192.168.1.1
+
+records the traffic to and from host 192.168.1.1.
+
+[zeus ~]# ./snort -h 192.168.1.0/24 -d -v net 192.168.1 and not host 192.168.1.1
+
+records all traffic on the 192.168.1.0/24 class C subnet, but not traffic 
+to/from 192.168.1.1.  Notice that the command line data specified after the
+"-h" switch is formated differently from the BPF commands provided at the end 
+of the command line.  Sorry for the confusion, but I like the CIDER notation and
+I'm not rewriting libpcap to make it consistent!  Anyway, you get the picture.
+Mail me if you have trouble with it.
+
+
+
+
+[*][RULES]:
+      
+     New as of version 0.98 is the concept of rules.  Now you can start to use
+Snort as a real live intrusion detection system, albeit not quite as good as
+commercial systems.  The rules formats are fairly simple for now and are 
+covered in the "RULES.SAMPLE" file included in the distribution.  Please look 
+there for complete explainations of how the rules system works.
+
+     The Alerts which are generated by the system are logged to a file named
+(suprisingly enough) "alert".  You can use something like "rt" or just "tail -f"
+it to give a running display of system alerts.
+
+     Note that the system requires the use of the "-l" flag to redirect rules 
+based logging to a specific directory.  If you don't specify a place for it to
+go, it goes into where ever Snort thinks "." is, probably either your current
+working directory or wherever the Snort binary is located.  I recommend using
+the "-l" option. :)
+
+     Remember, if you specify a rules file, it doesn't log everything anymore,
+just the things which match the current rules set.  Rules are applied in the
+order in which they're entered in their class.  In other words, the Alert
+rules are applied in the order they're read out of the rules file, and so on
+for Log and Pass rules.
+
+
+******************************************************************************
