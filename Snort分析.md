@@ -225,7 +225,7 @@ alert udp any any -> 192.168.1.0/24 111 (msg:"External mountd access"; content:"
 
 ### 功能模型    
 
-![对象模型](picture/snort-1.0-功能模型.svg)  
+![功能模型](picture/snort-1.0-功能模型.png)   
 
 
 ### 对象模型   
@@ -240,7 +240,7 @@ alert udp any any -> 192.168.1.0/24 111 (msg:"External mountd access"; content:"
 - 函数：映射为模块类的静态方法。  
 - main函数：映射为公有静态方法。  
 
-![对象模型](picture/snort-1.0-对象模型.svg)  
+![对象模型](picture/snort-1.0-对象模型.png)   
 
 ### 动态模型    
 
@@ -249,4 +249,4 @@ alert udp any any -> 192.168.1.0/24 111 (msg:"External mountd access"; content:"
 - 只被调用一次的函数，调用时则连续展开。  
 - 被多个地方调用的函数，则独立为其建立生命线。  
 
-![对象模型](picture/snort-1.0-动态模型.svg)  
+![动态模型](picture/snort-1.0-动态模型.png)   

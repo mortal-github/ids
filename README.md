@@ -1,5 +1,7 @@
 # ids   
 
+[Snort分析请看文档“Snort分析.md”](https://10.21.49.169/3118005434/ids/blob/master/Snort%E5%88%86%E6%9E%90.md)  
+
 # 第一次作业  
 
 **任务**：  
