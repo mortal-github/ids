@@ -1,0 +1,13 @@
+Bug reports should be sent to roesch@clark.net
+
+Please include the following information with your report:
+
+System Architecture (Sparc, x86, etc)
+Operating System and version (Linux 2.0.22, IRIX 5.3, etc)
+What rules (if any) you were using
+What command line switches you were using
+Any Snort error messages
+
+Thanks!
+
+    -Marty

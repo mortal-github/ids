@@ -1,0 +1,98 @@
+AC_INIT(snort.c)
+AM_CONFIG_HEADER(config.h)
+AM_INIT_AUTOMAKE(snort,1.5)
+AM_PROG_CC_STDC
+
+AC_PROG_CC
+ if test -n "$GCC"; then
+      CFLAGS="$CFLAGS -Wall "
+ fi
+
+AC_CANONICAL_HOST
+linux=no
+
+AC_C_BIGENDIAN
+
+case "$host" in
+  *-openbsd*)
+    AC_DEFINE(OPENBSD)
+
+    if test "$host_cpu" = "sparc"; then
+        AC_DEFINE(WORDS_MUSTALIGN)
+    fi
+    ;;
+  *-sgi-irix5*)
+    AC_DEFINE(IRIX)
+    no_libsocket=yes
+    no_libnsl=yes
+    if test -z "$GCC"; then
+      sgi_cc=yes
+    fi
+    ;;
+  *-sgi-irix6*)
+    AC_DEFINE(IRIX)
+    no_libsocket=yes
+    no_libnsl=yes
+    if test -z "$GCC"; then
+      sgi_cc=yes
+    fi
+    ;;
+  *-solaris*)
+    AC_DEFINE(SOLARIS)
+
+    if test "$host_cpu" = "sparc"; then
+        AC_DEFINE(WORDS_MUSTALIGN)
+    fi
+    ;;
+  *-linux*)
+    linux=yes
+    AC_DEFINE(LINUX)
+    AC_DEFINE(PCAP_TIMEOUT_IGNORED)  # libpcap doesn't even LOOK at
+                                     # the timeout you give it under Linux
+    AC_SUBST(extra_incl)
+    extra_incl=-I/usr/include/pcap
+    ;;
+  *-hpux10*)
+    AC_DEFINE(HPUX)
+    AC_DEFINE(WORDS_BIGENDIAN)
+    AC_SUBST(extra_incl)
+    extra_incl=-I/usr/local/include
+    ;;
+
+  *-freebsd*)
+    AC_DEFINE(FREEBSD)
+    ;;
+  *-bsdi*)
+    AC_DEFINE(BSDI)
+    ;;
+
+esac
+
+dnl make sure we've got all our libraries
+if test -z "$no_libnsl"; then
+AC_CHECK_LIB(nsl, inet_ntoa)
+fi
+
+if test -z "$no_libsocket"; then
+AC_CHECK_LIB(socket, socket)
+fi
+
+
+LPCAP=""
+AC_CHECK_LIB(pcap, pcap_datalink,, LPCAP="no")
+
+if test "$LPCAP" = "no"; then
+  echo
+  echo "   ERROR!  Libpcap not found, go get it from"
+  echo "   ftp://ftp.ee.lbl.gov/libpcap.tar.Z"
+  echo 
+  exit
+fi
+
+AC_ARG_ENABLE(smbalerts,
+[  --enable-smbalerts      SMB alerting capaility via Samba],
+                CFLAGS="$CFLAGS -DENABLE_SMB_ALERTS",)
+
+AC_PROG_INSTALL
+AC_OUTPUT(Makefile)
+

@@ -1,0 +1,27 @@
+# "other" stuff goes in here
+
+# Happy 99 Virus checking from Scott McIntyre
+alert tcp any any -> $HOME_NET 25 (msg:"Happy 99 Virus"; content:"X-Spanska\: Yes"; flags: PA;)
+
+# SNMP attempts from Ron Gula
+alert udp any any -> $HOME_NET 161 (msg:"SNMP NT User List"; content:"|2b06 0104 014d 0102 19|";)
+
+# netbios probes from Ron Gula
+alert udp any any -> $HOME_NET 137 (msg:"SMB Name Wildcard"; content:"CKAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA|0000|";)
+alert tcp any any -> $HOME_NET 139 (msg:"Samba client access"; content:"|00|Unix|00|Samba";)
+alert tcp any any -> $HOME_NET 139 (msg:"SMB CD..."; content:"\...|00 00 00|";)
+alert tcp any any -> $HOME_NET 139 (msg:"SMB CD.."; content:"\..|2f 00 00 00|";)
+alert tcp any any -> $HOME_NET 139 (msg:"SMB C$ access"; content:"\C$|00 41 3a 00|";)
+alert tcp any any -> $HOME_NET 139 (msg:"SMB D$ access"; content:"\D$|00 41 3a 00|";)
+alert tcp any any -> $HOME_NET 139 (msg:"SMB ADMIN$ access"; content:"\ADMIN$|00 41 3a 00|";)
+
+# alert on stuff going where it probably shouldn't be
+# note that the port range specification is inclusive, so we're keying on ports 0-1023
+alert tcp any 53 -> $HOME_NET :1023 (msg:"Source Port traffic";)
+alert udp any 53 -> $HOME_NET :1023 (msg:"Source Port traffic";)
+alert tcp any 25 -> $HOME_NET :1023 (msg:"Source Port traffic";)
+
+alert tcp any any -> $HOME_NET 32771 (msg: "Attempted Sun RPC high port access";)
+alert udp any any -> $HOME_NET 32771 (msg: "Attempted Sun RPC high port access";)
+alert udp any any -> $HOME_NET 161 (msg: "SNMP public access"; content:"public";)
+

@@ -1,0 +1,55 @@
+# These rules are trying to log data to "sensitive" ports, plus alert on truly
+# suspicious activity.  Note that you must change the addresses to reflect
+# your local network, these rules are currently setup for an RFC 1918 address
+# space.
+
+# Some of these rules may not be suspicious in your network environment, and
+# using all of the rules at the same time may lead to serious packet loss
+# on slower machines.  YMMV, use with caution, standard disclaimers apply. :)
+
+# If you need help writing a specific rule, feel free to drop me a line!
+
+#  -Marty (roesch@clark.net) 
+
+# Credits:
+
+# Ron Gula <rgula@securitywizards.com> of Network Security Wizards
+# Martin Markgraf <martin@mail.du.gtn.com>  
+# CyberPsychotic <fygrave@tigerteam.net>
+# Nick Rogness <nick@rapidnet.com>
+# Jim Forster <jforster@rapidnet.com>
+# Scott McIntyre <scott@whoi.edu>
+
+# http_decode takes the port numbers that it's going to analyze as arguments
+# traffic on these ports will be sent through the http_decode routine for
+# normalization
+
+preprocessor http_decode: 80 443 8080
+
+# minfrag takes the minimum fragment size (in bytes) threshold as its argument
+# fragmented packets at of below this size will cause an alert to be generated
+
+preprocessor minfrag: 128
+
+# set the HOME_NET variable for your own network
+
+var HOME_NET 10.1.1.0/24
+
+
+include web-lib
+include overflow-lib
+include misc-lib
+include scan-lib
+include backdoor-lib
+
+##################################
+# alert on interesting packets
+##################################
+
+# new rules for detection source port traffic
+alert icmp !$HOME_NET any -> $HOME_NET any (ipopts: lsrr; msg: "Source routed packet";)
+alert icmp !$HOME_NET any -> $HOME_NET any (ipopts: ssrr; msg: "Source routed packet";)
+alert tcp !$HOME_NET any -> $HOME_NET any (ipopts: lsrr; msg: "Source routed packet";)
+alert tcp !$HOME_NET any -> $HOME_NET any (ipopts: ssrr; msg: "Source routed packet";)
+alert udp !$HOME_NET any -> $HOME_NET any (ipopts: lsrr; msg: "Source routed packet";)
+alert udp !$HOME_NET any -> $HOME_NET any (ipopts: ssrr; msg: "Source routed packet";)

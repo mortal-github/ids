@@ -1,0 +1,15 @@
+# Buffer overflows go here!
+
+# IMAP buffer overflow
+alert tcp any any -> $HOME_NET 143 (msg:"IMAP Buffer Overflow!"; content:"|E8 C0FF FFFF|"; flags: PA;)
+
+# x86 named buffer overflow
+alert tcp any any -> $HOME_NET 53 (msg:"named Buffer Overflow!"; content:"|CD80 E8D7 FFFF FF|"; flags: PA;)
+
+# New buffer overflows submitted by Martin Markgraf
+alert tcp any any -> $HOME_NET 110 (msg:"QPOP Buffer Overflow!"; content:"|E8 D9FF FFFF|";  flags: PA;)
+alert tcp any any -> $HOME_NET 21 (msg:"FTP Buffer Overflow-1!"; content:"|5057 440A 2F69|"; flags: PA;)
+alert tcp any any -> $HOME_NET 21 (msg:"FTP Buffer Overflow-2!"; content:"|5858 5858 582F|"; flags: PA;)
+
+# New BOF from CyberPsychotic, this one detects Duke's wu-ftpd attack
+alert tcp any any -> $HOME_NET 21 (msg:"FTP buffer overflow1!"; content:"|5057 440A 2F69|";)

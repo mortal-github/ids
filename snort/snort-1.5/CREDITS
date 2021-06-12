@@ -1,0 +1,96 @@
+Sebastian	<scut@nb.in-berlin.de>
+	* Added TOS decoding and logging
+
+Ron Gula	<rjg@network-defense.com>
+	* Provided lots of advice and signatures  Check out his network IDS
+	  Dragon at www.securitywizards.com
+
+Mike Borella	<mike@borella.net>
+	* Made some libpcap code that was actually easy enough to follow along
+          in so that even idiots like myself could do something like this.  
+          Mike's a cool dude (and he listens to Slayer), check his stuff out
+          at www.borella.net
+
+Jed Pickel	<jed@pickel.net>
+	* Sent in the RAW packet decoder routine
+
+Chris Sylvain	<csylvain@itg.ummc.ab.umd.edu>
+	* Added HP-UX and S/Linux code, plus the "-x" command line switch.
+
+Damien Daspit	<damien@bryan.edu>
+	* Provided the WinPopup code and some other bug fixes, plus helped me
+	  debug a nasty problem with the rules parser.
+
+Sebastien L.	<splice@videotron.ca>
+	* Ideas guy and RPM guru, he's been a help behind the scenes lately.
+
+CyberPsychotic 	<fygrave@tigerteam.net>
+	* configure.in Sparc alignment updatesxi
+	* daemon mode code
+	* lots of help debugging the 1.2 release on OpenBSD/Sparc
+	* new ftpd buffer overflow rule
+	* UnixSock alerting code
+	* NULL/Loopback decoder
+	* my right hand man in Snort development, constantly working on 
+	  new stuff and enhancements for the system
+
+Nick Rogness and Jim Forster <nick@rapidnet.com> <jforster@rapidnet.com>
+	* lots o' rules, bug reports
+
+Scott McIntyre <scott@whoi.edu>
+	* Happy 99 virus rule
+	* wacky FBSD bugs and attendant help with said bugs
+	* also spotted the otn_tmp NULL bug in 1.3
+	* tons of debug info and help!
+
+Ron Snyder <snyder@athena.lblesd.k12.or.us>
+	* IP address negation operator code
+	* Bug hunter extrordinaire
+
+Jonathan Emery <jemery@countersign-sq.com>
+	* Ran Purify on the Snort source and tracked down some nasty buggage
+
+Aaron Smith <aaron@mutex.org>
+	* non-promiscuous mode patch
+	* logging code streamlining
+
+Dug Song & Torbjorn Wictorin <dugsong@monkey.org> <torbjorn.wictorin@its.uu.se> 
+	* Torbjorn spotted it first, but Dug sent in a kick ass bug report so 
+	  they both get credit for finding the otn_tmp NULL bug in LogPkt.
+
+Max Vision <vision@whitehats.com>
+	* Ideas, debug help, lots of rules
+
+Dragos Ruiu <dr@v-wave.com>
+	* Ideas guy, keeps me honest :)
+
+Colin Haxton <Colin.Haxton@arena.co.nz>
+	* Timestamp bugfix, debug help
+
+Worm5er <worm5er@hushmail.com>
+	* Master Debugger, he's always got the best bugs! :)
+
+Lance Spitzner <lance@ksni.net>
+	* Thank Lance for the session keyword!
+	* Lots of debug help, suggestions
+
+Christian Lademann <cul@zls.de>
+	* The Man!  Added the rules file variable and include code.  This man
+	  should have a place in every Snort user's heart. ;)
+	* Added the ISDN for Linux support/decoders
+
+Christian Hammers <ch@genesis.westend.com>
+	* Maintains the Debian distro of Snort, sends me bug reports
+
+John Flowers <jflowers@hiverworld.com>
+	* Generously offered to host the Snort CVS server
+
+Michael Henry <mike@dergott.com>
+	* Sent in the URL decoder that eventually became the http_decode
+	  preprocessor
+
+Bob Beck <beck@bofh.ucs.ualberta.ca>
+	* Sent in a few security patches, some advice (unheeded as of yet) on
+	  substituting snprintf for sprintf.
+
+ 

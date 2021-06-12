@@ -1,0 +1,14 @@
+#undef PACKAGE
+#undef VERSION
+#undef BSDI
+#undef FREEBSD
+#undef IRIX
+#undef LINUX
+#undef OPENBSD
+#undef PCAP_TIMEOUT_IGNORED
+#undef SOLARIS
+#undef STUPID_SOLARIS_CHECKSUM_BUG
+#undef HPUX
+#undef WORDS_MUSTALIGN
+
+
