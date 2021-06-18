@@ -2,6 +2,36 @@
 
 [Snort分析请看文档“Snort分析.md”](https://10.21.49.169/3118005434/ids/blob/master/Snort%E5%88%86%E6%9E%90.md)  
 
+# 第二次作业  
+
+### 安装虚拟机  
+![安装Kali.png](picture/安装Kali.png)  
+
+### 端口扫描
+**nmap 端口扫描**。  
+![nmap扫描.png](picture/nmap扫描.png)  
+
+### 抓包软件  
+**wrieshark抓包**。  
+![picture/wireshark抓包.png](picture/wireshark抓包.png)
+
+### 入侵检测软件   
+**hydra入侵检测软件**  
+![picture/dydra入侵检测.png](picture/dydra入侵检测.png)  
+
+### 学习命令行  
+**学习Windows命令行bat文件，ps文件，linux脚本文件**。  
+Win命令可以在[Win命令](https://docs.microsoft.com/zh-cn/windows-server/administration/windows-commands/windows-commands)查看。  
+
+新建hello.bat。  
+```
+@echo Hello Wrold
+pause
+```
+
+双击打开如下：  
+![picture/bat脚本.png](picture/bat脚本.png)   
+
 # 第一次作业  
 
 **任务**：  
