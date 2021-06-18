@@ -1,6 +1,53 @@
 # ids   
 
 [Snort分析请看文档“Snort分析.md”](https://10.21.49.169/3118005434/ids/blob/master/Snort%E5%88%86%E6%9E%90.md)  
+# 第三次作业  
+在[国家漏洞库](http://www.cnnvd.org.cn/)内搜索至少10条漏洞，其中要至少包含 1. 缓冲区溢出，2. 跨站点攻击，3. SQL注入攻击， 4. DoS攻击。请将它们归类，并给出解释。  
+
+## 缓冲区溢出  
+**Linux kernel和netfilter 缓冲区溢出漏洞**。  
+解释：该漏洞是linux内核上一个数据包过滤框架未正确验证数据边界导致的错误读写操作而形成的漏洞，攻击者可以咯用此漏洞导致缓冲区/堆溢出。  
+![picture/Linux_kernel和netfilter缓冲区溢出漏洞.png](picture/Linux_kernel和netfilter缓冲区溢出漏洞.png)  
+
+
+**深信服SSL VPN 基于栈的缓冲区溢出漏洞**。  
+解释：该漏洞某一个版本以及之前的客户端存在栈的缓冲区溢出漏洞。  
+![picture/深信服SSL_VPN _基于栈的缓冲区溢出漏洞.png](picture/深信服SSL_VPN_基于栈的缓冲区溢出漏洞.png)  
+
+## 跨站点攻击  
+
+**Mozilla Firefox HTML文档跨站攻击漏洞**。  
+解释：该漏洞是部分火狐浏览器由于没有正确的处理HTTP头文件携带"Content-Disposition： attachment" 和 "Content-Type： multipart"的情况，远程攻击借可以借助上传HTML文档导致跨站脚本攻击，SeaMonkey 2.0.5 之前的版本的浏览器也存在此漏洞。  
+![picture/Mozilla_Firefox_HTML文档跨站攻击漏洞.png](picture/Mozilla_Firefox_HTML文档跨站攻击漏洞.png)  
+
+**MediaWiki Wiki页跨站攻击漏洞**。  
+解释： MediaWiki 1.6.11之前的版本,1.12.2之前的版本1.12.x,和1.13.3之前的版本1.13.x中存在跨站脚本攻击漏洞, 当Internet Explorer被使用且上传被激活时, 或者一个SVG脚本浏览器被使用且SVG上传被激活时,远程验证用户通过编辑一个wiki页，可以借此注入任意web脚本或HTML。  
+![picture/MediaWiki_Wiki页跨站攻击漏洞.png](picutre/MediaWiki_Wiki页跨站攻击漏洞.png)  
+
+**PHP_Weather_'config/make_config.php'跨站攻击漏洞**。  
+解释：PHP Weather 2.2.2版本中的config/make_config.php存在存在跨站脚本攻击漏洞，远程攻击者可以借助PATH_INFO，注入任意的web脚本或HTML。  
+![picture/PHP_Weather_config_make_config.php跨站攻击漏洞.png](picture/PHP_Weather_config_make_config.php跨站攻击漏洞.png)  
+
+## SQL注入攻击  
+
+**Inxedu SQL注入漏洞**。  
+解释：该漏洞源于com/inxedu/OS/edu/controller/letter/AdminMsgSystemController的admin/letter/delsystem参数，执行恶意的SQL语句可能造成信息泄露、删除数据库等等。  
+![picture/InxeduSQL注入漏洞.png](picture/InxeduSQL注入漏洞.png)  
+
+**发货100-设计素材下载系统 SQL注入漏洞**。  
+解释：该应用厂商存在部分请求连接可以执行SQL注入。  
+![picture/发货100-设计素材下载系统_SQL注入漏洞.png](picture/发货100-设计素材下载系统_SQL注入漏洞.png)  
+
+**Online Reviewer System SQL注入漏洞**。  
+解释：Online Reviewer System 1.0 存在SQL注入漏洞，该漏洞源于认证绕过的SQL注入漏洞，可能导致shell反向上传。  
+![picture/Online_Reviewer_System_SQL注入漏洞.png](picture/Online_Reviewer_System_SQL注入漏洞.png)  
+
+## DOC攻击  
+
+**ICQ Web Front远程DoS攻击漏洞**。  
+解释：远程攻击者借助超长名称参数导致拒绝服务。  
+![picture/ICQ_Web_Front远程DoS攻击漏洞.png](picture/ICQ_Web_Front远程DoS攻击漏洞.png)  
+
 
 # 第二次作业  
 
